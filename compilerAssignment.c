@@ -6,7 +6,7 @@
 #define STsize 1000	//size of string table
 #define HTsize 100	//size of hash table
 
-//more define variables°¶
+//more define variables‚Ä¶
 
 typedef struct HTentry *HTpointer;
 typedef struct HTentry {
@@ -22,7 +22,7 @@ char separators[] = ".,;:?!\t\n";
 HTpointer HT[HTsize];
 char ST[STsize];
 
-//more global variables°¶
+//more global variables‚Ä¶
 ERRORtypes err;
 int nextid = 0;
 int nextfree = 0;
@@ -53,7 +53,7 @@ void PrintHStable()
 
 //PrintError - Print out error messages
 //		overst : overflow in ST
-//		print the hashtable and abort by calling the function °∞abort()°±.
+//		print the hashtable and abort by calling the function ‚Äúabort()‚Äù.
 //		illid : illegal identifier.
 //		illsp : illegal separator
 void PrintError(ERRORtypes err)
@@ -72,13 +72,14 @@ void ReadID()
 
 //ComputeHS -	Compute the hash code of identifier by summing the ordinal values of its
 //				characters and then taking the sum modulo the size of HT.
-void ComputeHS(int nid, int nfree)
-{
+void ComputeHS(int nid, int nfree){
+	//git push test
+	hashcode = 57;//ÏûÑÏãúÏΩîÎìú
 }
 
 //LookupHS -	For each identifier, Look it up in the hashtable for previous occurrence 
 //				of the identifier. If find a match, set the found flag as true.
-//				Otherwise flase <? ø¿≈∫∞°
+//				Otherwise flase <? Ïò§ÌÉÑÍ∞Ä
 //				If find a match, save the starting index of ST in same id.
 void LookupHS(int nid, int hscode)
 {
@@ -110,7 +111,7 @@ int main()
 	initialize();
 
 
-	//26∆‰¿Ã¡ˆ
+	//26ÌéòÏù¥ÏßÄ
 
 
 	while (input != EOF) {
