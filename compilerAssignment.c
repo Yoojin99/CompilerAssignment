@@ -73,8 +73,26 @@ void ReadID()
 //ComputeHS -	Compute the hash code of identifier by summing the ordinal values of its
 //				characters and then taking the sum modulo the size of HT.
 void ComputeHS(int nid, int nfree){
-	//git push test
-	hashcode = 57;//임시코드
+
+	// m=size of hash table, f(x)=sum of ordinal values of x's characters
+	// H(x)=(f(x) mod m)+1
+	// 순서: a~z(대소문자 구분x),_,0~9
+	int sum = 0;
+	char now = ST[nid];
+	int i = nid;
+	for (i = nid; i < nfree; i++) {
+		if (now >= 'A'&&now <= 'Z')
+			sum += now - 'A';
+		else if (now >= 'a'&&now <= 'Z')
+			sum += now - 'a';
+		else if (now == '_')
+			sum += 26;
+		else if (now >= '0'&&now <= '9')
+			sum += 27 + now - '0';
+	}
+
+	hashcode = sum % HTsize;
+
 }
 
 //LookupHS -	For each identifier, Look it up in the hashtable for previous occurrence 
