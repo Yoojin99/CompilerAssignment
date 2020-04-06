@@ -19,7 +19,7 @@ typedef struct HTentry {
 enum errorTypes { noerror, illsp, illid, overst };
 typedef enum errorTypes ERRORtypes;
 
-char separators[] = ".,;:?!\t\n";
+char separators[] = " .,;:?!\t\n";
 
 HTpointer HT[HTsize];
 char ST[STsize];
@@ -37,7 +37,7 @@ char input;
 
 //Initialize - open input file
 void initialize() {
-	fp = fopen(FILE_NAME,"r");
+	fp = fopen(FILE_NAME, "r");
 	input = fgetc(fp);
 }
 
@@ -50,7 +50,7 @@ void SkipSeparators() {
 	while (1) {
 		is_separator = 0;
 		//공백검사
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 9; i++) {
 			if (input == separators[i]) {
 				is_separator = 1;
 				break;
@@ -61,14 +61,13 @@ void SkipSeparators() {
 			input = fgetc(fp);
 		else {
 			//유효한 문자다
-			if (isalnum(input))
+			if (isalnum(input) || input == '_')
 				break;
 			else {
 				err = illsp;
 				break;
 			}
 		}
-
 	}
 }
 
@@ -100,7 +99,7 @@ void ReadID()
 
 //ComputeHS -	Compute the hash code of identifier by summing the ordinal values of its
 //				characters and then taking the sum modulo the size of HT.
-void ComputeHS(int nid, int nfree){
+void ComputeHS(int nid, int nfree) {
 
 	// m=size of hash table, f(x)=sum of ordinal values of x's characters
 	// H(x)=(f(x) mod m)+1
@@ -153,34 +152,36 @@ Print out the hashtable, and number of characters used up in ST
 int main()
 {
 	int i;
-	PrintHeading();
+	//PrintHeading();
 	initialize();
 
-
 	//26페이지
-
-
 	while (input != EOF) {
 		err = noerror;
 		SkipSeparators();
+		printf("%c", input);
+		input = fgetc(fp);
+
+		
 		ReadID();
 		if (input != EOF && err != illid) {
-			if (nextfree == STsize) {
-				// print error message
-			}
-			ST[nextfree++] = '/0';
-
-			ComputeHS(nextid, nextfree);
-			LookupHS(nextid, hashcode);
-
-			if (!found) {
-				// print message
-				ADDHT(hashcode);
-			}
-			else {
-				// print message
-			}
+		if (nextfree == STsize) {
+		// print error message
 		}
+		ST[nextfree++] = '/0';
+
+		ComputeHS(nextid, nextfree);
+		LookupHS(nextid, hashcode);
+
+		if (!found) {
+		// print message
+		ADDHT(hashcode);
+		}
+		else {
+		// print message
+		}
+		}
+		
 	}
 	PrintHStable();
 }

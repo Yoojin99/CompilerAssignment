@@ -19,7 +19,7 @@ typedef struct HTentry {
 enum errorTypes { noerror, illsp, illid, overst };
 typedef enum errorTypes ERRORtypes;
 
-char separators[] = ".,;:?!\t\n";
+char separators[] = " .,;:?!\t\n";
 
 HTpointer HT[HTsize];
 char ST[STsize];
@@ -50,7 +50,7 @@ void SkipSeparators() {
 	while (1) {
 		is_separator = 0;
 		//공백검사
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 9; i++) {
 			if (input == separators[i]) {
 				is_separator = 1;
 				break;
@@ -61,22 +61,20 @@ void SkipSeparators() {
 			input = fgetc(fp);
 		else {
 			//유효한 문자다
-			if (isalnum(input))
+			if (isalnum(input) || input == '_')
 				break;
 			else {
 				err = illsp;
 				break;
 			}
 		}
-		
 	}
-
 }
 
 //PrintHStable -	Prints the hash table.write out the hashcode and the list of identifiers
 // 					associated with each hashcode, but only for non-empty list.
 //					Print out the number of characters used up in ST.
-void PrintHStable()
+void PrintHStable() 
 {
 }
 
@@ -102,8 +100,26 @@ void ReadID()
 //ComputeHS -	Compute the hash code of identifier by summing the ordinal values of its
 //				characters and then taking the sum modulo the size of HT.
 void ComputeHS(int nid, int nfree) {
-	//git push test
-	hashcode = 57;//임시코드
+
+	// m=size of hash table, f(x)=sum of ordinal values of x's characters
+	// H(x)=(f(x) mod m)+1
+	// 순서: a~z(대소문자 구분x),_,0~9
+	int sum = 0;
+	char now = ST[nid];
+	int i = nid;
+	for (i = nid; i < nfree; i++) {
+		if (now >= 'A'&&now <= 'Z')
+			sum += now - 'A';
+		else if (now >= 'a'&&now <= 'Z')
+			sum += now - 'a';
+		else if (now == '_')
+			sum += 26;
+		else if (now >= '0'&&now <= '9')
+			sum += 27 + now - '0';
+	}
+
+	hashcode = sum % HTsize;
+
 }
 
 //LookupHS -	For each identifier, Look it up in the hashtable for previous occurrence 
@@ -140,13 +156,12 @@ int main()
 	initialize();
 
 	//26페이지
-
-	
 	while (input != EOF) {
 		err = noerror;
-		SkipSeparators(input);
+		SkipSeparators();
 		printf("%c", input);
 		input = fgetc(fp);
+		
 		/*
 		ReadID();
 		if (input != EOF && err != illid) {
@@ -168,7 +183,5 @@ int main()
 		}
 		*/
 	}
-	/*
 	PrintHStable();
-	*/
 }
