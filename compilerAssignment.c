@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
-#define FILE_NAME "testdata.txt"
+#define _CRT_SECURE_NO_WARNINGS
+#define FILE_NAME "testdata1.txt"
 #define STsize 1000	//size of string table
 #define HTsize 100	//size of hash table
 
@@ -28,6 +30,7 @@ int nextid = 0;
 int nextfree = 0;
 int found = 0;
 int hashcode = 0;
+int is_separator = 0;	//읽어들인 문자가 유효 separator인지 검사
 
 FILE *fp;	//to be a pointer to FILE
 char input;
@@ -41,7 +44,32 @@ void initialize() {
 //Skip Separators - skip over strings of space, tabs, newlines, . , ; : ? !
 //			if illegal separators, print out error message.
 void SkipSeparators() {
+	//공백문자일때 계속 반복
+	//이상한 문자 나오면 오류 설정하고 빠져나옴
+	//정상문자일 경우 그냥 나옴
+	while (1) {
+		is_separator = 0;
+		//공백검사
+		for (int i = 0; i < 8; i++) {
+			if (input == separators[i]) {
+				is_separator = 1;
+				break;
+			}
+		}
+		//공백이라면 계속 읽어들임
+		if (is_separator == 1)
+			input = fgetc(fp);
+		else {
+			//유효한 문자다
+			if (isalnum(input))
+				break;
+			else {
+				err = illsp;
+				break;
+			}
+		}
 
+	}
 }
 
 //PrintHStable -	Prints the hash table.write out the hashcode and the list of identifiers
