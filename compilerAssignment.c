@@ -28,6 +28,7 @@ int nextid = 0;
 int nextfree = 0;
 int found = 0;
 int hashcode = 0;
+int sameid = 0;
 
 FILE *fp;	//to be a pointer to FILE
 char input;
@@ -80,7 +81,8 @@ void ComputeHS(int nid, int nfree){
 	int sum = 0;
 	char now = ST[nid];
 	int i = nid;
-	for (i = nid; i < nfree; i++) {
+	for (i = nid; i < nfree || now==' '; i++) {
+		now = ST[i];
 		if (now >= 'A'&&now <= 'Z')
 			sum += now - 'A';
 		else if (now >= 'a'&&now <= 'Z')
@@ -101,6 +103,26 @@ void ComputeHS(int nid, int nfree){
 //				If find a match, save the starting index of ST in same id.
 void LookupHS(int nid, int hscode)
 {
+	int i, j;
+	HTpointer temp = HT[hscode];
+
+	found = 0;
+	while (temp != NULL && found==0) {
+		i = temp->index;
+		j = nid;
+		sameid = i;
+		found = 1;
+		while (ST[i] != ' ' && ST[j] != ' ') {
+			if (ST[i] != ST[j]) {
+				found = 0;
+				break;
+			}
+			i++;
+			j++;
+		}
+		temp = temp->next;
+		
+	}
 }
 
 //ADDHT -	Add a new identifier to the hash table.
@@ -109,7 +131,6 @@ void LookupHS(int nid, int hscode)
 //			IF list head is not a null, it adds a new identifier to the head of the chain
 void ADDHT(int hscode)
 {
-
 }
 
 
@@ -140,7 +161,7 @@ int main()
 			if (nextfree == STsize) {
 				// print error message
 			}
-			ST[nextfree++] = '/0';
+			ST[nextfree++] = ' ';
 
 			ComputeHS(nextid, nextfree);
 			LookupHS(nextid, hashcode);
